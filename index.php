@@ -310,7 +310,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["procesar"])) {
                             <?php $estado =$estudianteProcesado->obtenerEstado(); ?>
                             <div class="card p-3 border-0 shadow-sm bg-white">
                                 <p class="mb-2"><strong>Estudiante:</strong> <?= htmlspecialchars($estudianteProcesado->getNombre()) ?></p>
-                                <p class="mb-2"><strong>Nota 1:</strong> <?= $estudianteProcesado->getNota1() ?> \vert{} <strong>Nota 2:</strong> <?=$estudianteProcesado->getNota2() ?></p>
+                                <p class="mb-2"><strong>Nota 1:</strong> <?= $estudianteProcesado->getNota1() ?> | <strong>Nota 2:</strong> <?=$estudianteProcesado->getNota2() ?></p>
                                 <p class="mb-2"><strong>Promedio Calculado:</strong> <?= number_format($estudianteProcesado->calcularPromedio(), 2) ?></p>
                                 <div class="mt-2">
                                     <strong>Estado Final:</strong>
