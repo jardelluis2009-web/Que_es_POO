@@ -39,13 +39,18 @@ class Estudiante {
 
 // Procesamiento del Formulario
 $estudianteProcesado = null;
+$mensajeError = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["procesar"])) {
-    $nombreInput = trim($_POST["nombre"]);
-    $nota1Input = (float)$_POST["nota1"];
-    $nota2Input = (float)$_POST["nota2"];
+    $nombreInput = trim($_POST["nombre"] ?? "");
+    $nota1Input = filter_var($_POST["nota1"] ?? null, FILTER_VALIDATE_FLOAT);
+    $nota2Input = filter_var($_POST["nota2"] ?? null, FILTER_VALIDATE_FLOAT);
 
-    // Instanciación del Objeto
-    $estudianteProcesado = new Estudiante($nombreInput, $nota1Input, $nota2Input);
+    if ($nombreInput === "" || $nota1Input === false || $nota2Input === false || $nota1Input < 0 || $nota1Input > 10 || $nota2Input < 0 || $nota2Input > 10) {
+        $mensajeError = "Introduce valores válidos para el nombre y las notas, con un rango entre 0 y 10.";
+    } else {
+        // Instanciación del Objeto
+        $estudianteProcesado = new Estudiante($nombreInput, $nota1Input, $nota2Input);
+    }
 }
 ?>
 
@@ -277,18 +282,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["procesar"])) {
                                 <label class="form-label fw-semibold">Nombre del Estudiante:</label>
                                 <input type="text" name="nombre" class="form-control" placeholder="Ej: Jardel Canga" required>
                             </div>
+                            <?php if ($mensajeError !== ""): ?>
+                                <div class="alert alert-warning small mb-3">
+                                    <i class="fa-solid fa-circle-exclamation me-2"></i><?= htmlspecialchars($mensajeError) ?>
+                                </div>
+                            <?php endif; ?>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-semibold">Nota Parcial 1:</label>
-                                    <input type="number" step="0.1" min="0" max="10" name="nota1" class="form-control" placeholder="8.5" required>
+                                    <input type="number" step="any" min="0" max="10" name="nota1" class="form-control" placeholder="8.5" value="<?= htmlspecialchars($_POST["nota1"] ?? "") ?>" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-semibold">Nota Parcial 2:</label>
-                                    <input type="number" step="0.1" min="0" max="10" name="nota2" class="form-control" placeholder="9.0" required>
+                                    <input type="number" step="any" min="0" max="10" name="nota2" class="form-control" placeholder="9.0" value="<?= htmlspecialchars($_POST["nota2"] ?? "") ?>" required>
                                 </div>
                             </div>
-                            <button type="submit" name="procesar" class="btn btn-primary w-100 fw-bold py-2">
-                                <i class="fa-solid fa-play me-2"></i>Instanciar Objeto y Procesar
+                            <button type="submit" name="procesar" class="btn btn-primary w-100 fw-bold py-2">                                <i class="fa-solid fa-play me-2"></i>Instanciar Objeto y Procesar
                             </button>
                         </form>
                     </div>
